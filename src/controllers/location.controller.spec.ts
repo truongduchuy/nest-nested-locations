@@ -38,7 +38,7 @@ const location2 = {
   id: 1,
   name: 'Location1',
   locationNumber: 'location1 number',
-  parentId: null,
+  parentId: 1,
   area: 100,
   building,
 };
@@ -94,6 +94,19 @@ describe('LocationController', () => {
 
     const locations = await controller.getLocationsByBuilding(building.id);
     expect(locations).toEqual([location1, location2]);
+  });
+
+  it('should get a location by id', async () => {
+    const parentId = location1.id;
+    const locationsWithParentId = [location1, location2];
+
+    jest
+      .spyOn(service, 'getLocation')
+      .mockImplementation(() => Promise.resolve(locationsWithParentId));
+
+    expect(await controller.getLocation(parentId)).toEqual(
+      locationsWithParentId,
+    );
   });
 
   it('should create a location', async () => {
